@@ -1,3 +1,4 @@
 {
-   "token": "YOUR-BOT-TOKEN"
+   "token": "YOUR-BOT-TOKEN",
+   "prefix" : "!"
 }
