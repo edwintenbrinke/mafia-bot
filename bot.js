@@ -5,11 +5,6 @@ const client = new Discord.Client();
 
 const config = require("./auth.json");
 
-function isNormalInteger(str) {
-    var n = Math.floor(Number(str));
-    return n !== Infinity && String(n) === str && n >= 0;
-}
-
 function writeFile(path, data) {
     fs.writeFile(path, data, 'utf8', function (err) {
         if (err) {
@@ -88,14 +83,27 @@ function gambleFiftyFifty(channel, user, message) {
             return;
         }
 
-        if (Math.random() >= 0.5) {
-            channel.send("You won! Your points are being increased by $"+ amount.toString() +".");
-        } else {
-            channel.send("You lost. Your points are being decreased by $"+ amount.toString() +".");
-            amount = amount * -1;
+        var return_message;
+        var awnser = Math.random()*100;
+        switch(true) {
+            case (awnser > 99):
+                amount *= 10;
+                return_message = "Jackpot!";
+                break;
+            case (awnser >= 50):
+                return_message = "You won!";
+                break;
+            case (awnser < 50):
+                amount = amount * -1;
+                return_message = "You lost.";
+                break;
+            default:
+                console.log('wtf')
         }
 
         user_data.cash += amount;
+
+        channel.send(return_message + " Your cash is $"+user_data.cash.toString()+". You rolled a " + Math.round(awnser));
 
         writeFile(path, JSON.stringify(user_data));
     });
@@ -169,6 +177,5 @@ client.on("message", async message => {
         gambleFiftyFifty(message.channel, message.author, args.join(" "))
     }
 });
-
 
 client.login(config.token);
