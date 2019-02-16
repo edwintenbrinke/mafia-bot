@@ -3,11 +3,10 @@ const client = new Discord.Client();
 const settings = require('./settings.json');
 const chalk = require('chalk');
 const fs = require('fs');
-const moment = require('moment');
 require('./util/eventLoader')(client);
 
 const log = (msg) => {
-    console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${msg}`);
+    console.log(`${msg}`);
 };
 
 client.commands = new Discord.Collection();
