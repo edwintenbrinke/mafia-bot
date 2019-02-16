@@ -1,8 +1,106 @@
 const Discord = require("discord.js");
+const fs = require('fs');
 
 const client = new Discord.Client();
 
 const config = require("./auth.json");
+
+function isNormalInteger(str) {
+    var n = Math.floor(Number(str));
+    return n !== Infinity && String(n) === str && n >= 0;
+}
+
+function writeFile(path, data) {
+    fs.writeFile(path, data, 'utf8', function (err) {
+        if (err) {
+            console.log(err);
+            writeFile(path, data);
+        }
+    });
+}
+
+function initUser(user) {
+    if (user.bot) return;
+    let path = './users/' + user.id + '.json';
+
+    let user_data = {
+        "id": user.id,
+        "username": user.username,
+        "cash": 0
+    };
+
+    fs.exists(path, (exists) => {
+        if (!exists) {
+            fs.writeFile(path, JSON.stringify(user_data), function(err, data){
+                if (err) console.log(err);
+                else console.log('Successfully written user file for '+ user.username);
+            });
+        }
+    })
+}
+
+function updateUserPoints(user, points) {
+    let path = './users/' + user.id + '.json';
+
+    fs.readFile(path, 'utf8', function (err,raw_user_data) {
+        if (err) return console.log(err);
+        var user_data = JSON.parse(raw_user_data);
+
+        user_data.cash += points;
+
+        writeFile(path, JSON.stringify(user_data));
+    });
+}
+
+function increaseAllOnlinePoints(users, points) {
+    users.array().forEach(function(user){
+        if (user.bot) return;
+        if (user.presence === "online" || user.presence === "dnd") return console.log(user.username + " no points. " + user.presence);
+
+        updateUserPoints(user, points);
+    });
+}
+
+function sendUserData(channel, user) {
+    let path = './users/' + user.id + '.json';
+    fs.readFile(path, 'utf8', function (err,raw_user_data) {
+        if (err) return console.log(err);
+        var user_data = JSON.parse(raw_user_data);
+
+        channel.send('User: ' + user.username + '\nCash: $' + user_data.cash);
+    });
+}
+
+function gambleFiftyFifty(channel, user, message) {
+    if (!parseInt(message, 10)) return console.log("no numeric");
+
+    let path = './users/' + user.id + '.json';
+    fs.readFile(path, 'utf8', function (err,raw_user_data) {
+        if (err) return console.log(err);
+        var user_data = JSON.parse(raw_user_data);
+
+        var amount = parseInt(message, 10);
+
+        if (amount < 0 || amount === Infinity) return;
+
+        if (user_data.cash < amount) {
+            channel.send('You don\'t have enough cash, you have $'+user_data.cash.toString());
+            return;
+        }
+
+        if (Math.random() >= 0.5) {
+            channel.send("You won! Your points are being increased by $"+ amount.toString() +".");
+        } else {
+            channel.send("You lost. Your points are being decreased by $"+ amount.toString() +".");
+            amount = amount * -1;
+        }
+
+        user_data.cash += amount;
+
+        writeFile(path, JSON.stringify(user_data));
+    });
+
+}
 
 client.on("ready", () => {
     // This event will run if the bot starts, and logs in, successfully.
@@ -10,6 +108,10 @@ client.on("ready", () => {
     // Example of changing the bot's playing game to something useful. `client.user` is what the
     // docs refer to as the "ClientUser".
     client.user.setActivity(`Serving ${client.guilds.size} servers`);
+
+    client.users.array().forEach(function (user) {
+        initUser(user);
+    })
 });
 
 client.on("guildCreate", guild => {
@@ -24,47 +126,49 @@ client.on("guildDelete", guild => {
     client.user.setActivity(`Serving ${client.guilds.size} servers`);
 });
 
+client.on("guildMemberAdd", user => {
+   initUser(user);
+});
 
 client.on("message", async message => {
-    // This event will run on every single message received, from any channel or DM.
-
-    // It's good practice to ignore other bots. This also makes your bot ignore itself
-    // and not get into a spam loop (we call that "botception").
     if(message.author.bot) return;
 
-    // Also good practice to ignore any message that does not start with our prefix,
-    // which is set in the configuration file.
     if(message.content.indexOf(config.prefix) !== 0) return;
 
-    // Here we separate our "command" name, and our "arguments" for the command.
-    // e.g. if we have the message "+say Is this the real life?" , we'll get the following:
-    // command = say
-    // args = ["Is", "this", "the", "real", "life?"]
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
-
-    // Let's go with a few common example commands! Feel free to delete or change those.
 
     if(command === "test") {
         console.log(message.author.username, message.author.id);
     }
 
     if(command === "ping") {
-        // Calculates ping between sending a message and editing it, giving a nice round-trip latency.
-        // The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
         const m = await message.channel.send("Ping?");
         m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(client.ping)}ms`);
     }
 
     if(command === "say") {
-        // makes the bot say something and delete the message. As an example, it's open to anyone to use.
-        // To get the "message" itself we join the `args` back into a string with spaces:
         const sayMessage = args.join(" ");
-        // Then we delete the command message (sneaky, right?). The catch just ignores the error with a cute smiley thing.
         message.delete().catch(O_o=>{});
-        // And we get the bot to say the thing:
         message.channel.send(sayMessage);
     }
+
+    if(command === "p") {
+        updateUserPoints(message.author, 50);
+    }
+
+    if(command === "i") {
+        sendUserData(message.channel, message.author);
+    }
+
+    if(command === "a") {
+        increaseAllOnlinePoints(client.users, 5);
+    }
+
+    if(command === "g50") {
+        gambleFiftyFifty(message.channel, message.author, args.join(" "))
+    }
 });
+
 
 client.login(config.token);
