@@ -6,9 +6,15 @@ exports.run = (client, message, msg) => {
         var user_data = JSON.parse(raw_user_data);
         var _user = client.helpers.get('user');
         var _date = client.helpers.get('date');
+        var _rank = client.helpers.get('rank');
 
-        if (_date.isInTheFuture(user_data.crime)) {
-            message.channel.send(_date.timeLeft(user_data.crime));
+        if (_date.isInTheFuture(user_data.org_crime)) {
+            message.channel.send(_date.timeLeft(user_data.org_crime));
+            return;
+        }
+
+        if (!_rank.isUserRank(user_data, 1)) {
+            message.channel.send(`You need to be atleast rank: ${_rank.getRankById(1).rank} to do this crime.`)
             return;
         }
 
@@ -16,14 +22,14 @@ exports.run = (client, message, msg) => {
         var awnser = Math.random() * 100;
         switch (true) {
             case (awnser > 97.5):
-                amount = (client.randomBetween(100, 250) * 10);
+                amount = (client.randomBetween(750, 1500) * 5);
                 return_message = "Jackpot! Your cash is $"+(user_data.cash + amount).toString()+". You recieved $" + Math.round(amount);
                 break;
-            case (awnser >= 25):
-                amount = client.randomBetween(100, 250);
+            case (awnser >= 40):
+                amount = client.randomBetween(750, 1500);
                 return_message = "Success! Your cash is $"+(user_data.cash + amount).toString()+". You recieved $" + Math.round(amount);
                 break;
-            case (awnser < 25):
+            case (awnser < 40):
                 var damage = client.randomBetween(1,10);
 
                 // check death
@@ -42,10 +48,10 @@ exports.run = (client, message, msg) => {
 
         if (amount > 0) {
             user_data.cash += amount;
-            user_data.exp += 10;
+            user_data.exp += 50;
         }
 
-        user_data.crime = _date.addSeconds(60);
+        user_data.org_crime = _date.addSeconds(180);
 
         message.channel.send(return_message);
         _user.writeFile(path, JSON.stringify(user_data));
@@ -56,12 +62,12 @@ exports.run = (client, message, msg) => {
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: ['c'],
+    aliases: ['oc'],
     permLevel: 0
 };
 
 exports.help = {
-    name: "crime",
-    description: "do a crime",
+    name: "org_crime",
+    description: "do an org_crime",
     usage: "crime"
 };

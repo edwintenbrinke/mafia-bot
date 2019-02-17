@@ -39,7 +39,7 @@ function everyHour(client, _user) {
         console.log("sleeping for "+difference+" minutes.");
         setTimeout(
             function() {
-                everyHour();
+                everyHour(client, _user);
             },
             difference * 60 * 1000
         );

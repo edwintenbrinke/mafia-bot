@@ -10,7 +10,7 @@ module.exports = {
             }
         });
     },
-    initUser: function(user) {
+    initUser: function(user, reset = false) {
         if (user.bot) return;
         let path = './users/' + user.id + '.json';
 
@@ -20,11 +20,12 @@ module.exports = {
             "cash": 0,
             "exp": 0,
             "health": 100,
-            "crime": now
+            "crime": now,
+            "org_crime": now
         };
 
         fs.exists(path, (exists) => {
-            if (!exists) {
+            if (!exists || reset) {
                 fs.writeFile(path, JSON.stringify(user_data), 'utf8', function (err) {
                     if (err) console.log(err);
                 });
@@ -53,13 +54,20 @@ module.exports = {
             if (err) return console.log(err);
             var user_data = JSON.parse(raw_user_data);
 
-            user_data.health = health
+            user_data.health = health;
             user_data.cash = cash;
 
             fs.writeFile(path, JSON.stringify(user_data), 'utf8', function (err) {
                 if (err) console.log(err);
             });
         });
+    },
+    checkDeath(message, health, damage) {
+        var new_health = health - damage;
+        if (new_health <= 0) {
+            message.channel.send("You have died... All your progress has reset.");
+            return true;
+        }
+        return false;
     }
-
 }
