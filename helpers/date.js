@@ -1,8 +1,9 @@
 var moment = require('moment');
 module.exports = {
     name: "date",
-    addSeconds: function(seconds) {
-        return moment().add(seconds, 's');
+    addSeconds: function(seconds, date) {
+        if(date === null) date = new Date();
+        return moment(date).add(seconds, 's');
     },
     isInTheFuture: function(_dt) {
         var dt = new Date(_dt);

@@ -4,7 +4,7 @@ exports.run = (client, message, msg) => {
 
     let path = './users/' + message.author.id + '.json';
     fs.readFile(path, 'utf8', function (err,raw_user_data) {
-        if (err) return console.log(err);
+        if (err) return client.log(err);
         var user_data = JSON.parse(raw_user_data);
 
         var amount = parseInt(msg, 10);

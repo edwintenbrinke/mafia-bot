@@ -29,14 +29,14 @@ function everyHour(client, _user) {
 
         setInterval(
             function() {
-                console.log("updating all points");
+                client.log("updating all points");
                 increaseAllOnlinePoints(_user, client.users, 50);
             },
             (1000 * 60 * 60)
         );
     } else {
         var difference = (60 - current_time.getMinutes());
-        console.log("sleeping for "+difference+" minutes.");
+        client.log("sleeping for "+difference+" minutes.");
         setTimeout(
             function() {
                 everyHour(client, _user);

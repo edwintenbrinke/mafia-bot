@@ -2,19 +2,24 @@ const fs = require('fs');
 exports.run = (client, message, msg) => {
     let path = './users/' + message.author.id + '.json';
     fs.readFile(path, 'utf8', function (err,raw_user_data) {
-        if (err) return console.log(err);
+        if (err) return client.log(err);
         var user_data = JSON.parse(raw_user_data);
         var _user = client.helpers.get('user');
         var _date = client.helpers.get('date');
         var _rank = client.helpers.get('rank');
 
+        if (_date.isInTheFuture(user_data.prison.time)) {
+            message.channel.send(`You're still in prison for: ${_date.timeLeft(user_data.prison.time)}`);
+            return;
+        }
+
         if (_date.isInTheFuture(user_data.org_crime)) {
-            message.channel.send(_date.timeLeft(user_data.org_crime));
+            message.channel.send(`You need to wait: ${_date.timeLeft(user_data.org_crime)} before you can do this crime again.`);
             return;
         }
 
         if (!_rank.isUserRank(user_data, 1)) {
-            message.channel.send(`You need to be atleast rank: ${_rank.getRankById(1).rank} to do this crime.`)
+            message.channel.send(`You need to be at least rank: ${_rank.getRankById(1).rank} to do this crime.`)
             return;
         }
 

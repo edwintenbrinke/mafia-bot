@@ -3,7 +3,7 @@ exports.run = (client, message, msg) => {
     if (msg.length !== 0 && !parseInt(msg, 10)) return console.log("no numeric");
     let path = './users/' + message.author.id + '.json';
     fs.readFile(path, 'utf8', function (err,raw_user_data) {
-        if (err) return console.log(err);
+        if (err) return client.log(err);
         var user_data = JSON.parse(raw_user_data);
         var _user = client.helpers.get('user');
 

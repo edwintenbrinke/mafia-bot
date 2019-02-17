@@ -17,11 +17,16 @@ module.exports = {
         var now = new Date();
         let user_data = {
             "id": user.id,
+            "username": user.username,
             "cash": 0,
             "exp": 0,
             "health": 100,
             "crime": now,
-            "org_crime": now
+            "org_crime": now,
+            "prison": {
+                "time": now,
+                "escape_chance": false
+            }
         };
 
         fs.exists(path, (exists) => {
@@ -60,6 +65,14 @@ module.exports = {
             fs.writeFile(path, JSON.stringify(user_data), 'utf8', function (err) {
                 if (err) console.log(err);
             });
+        });
+    },
+    updateUser(user){
+        let path = './users/' + user.id + '.json';
+
+        fs.writeFile(path, JSON.stringify(user), 'utf8', function (err) {
+            if (err) console.log(err);
+            console.log('written');
         });
     },
     checkDeath(message, health, damage) {

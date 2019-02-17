@@ -3,10 +3,11 @@ const client = new Discord.Client();
 const settings = require('./settings.json');
 const chalk = require('chalk');
 const fs = require('fs');
+const moment = require('moment');
 require('./util/eventLoader')(client);
 
-const log = (msg) => {
-    console.log(`${msg}`);
+client.log = (msg) => {
+    console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${msg}`);
 };
 
 client.commands = new Discord.Collection();
@@ -14,27 +15,34 @@ client.aliases = new Discord.Collection();
 client.helpers = new Discord.Collection();
 client.randomBetween = function randomBetween(max, min) { return Math.floor(Math.random() * (max - min + 1) ) + min; };
 
-fs.readdir('./commands/', (err, files) => {
-    if (err) console.error(err);
-    log(`Loading a total of ${files.length} commands.`);
-    files.forEach(f => {
-        if (f.substr(f.length -3) !== '.js') return;
-        let props = require(`./commands/${f}`);
-        log(`Loading command: "${props.help.name}"...`);
-        client.commands.set(props.help.name, props);
-        props.conf.aliases.forEach(alias => {
-            client.aliases.set(alias, props.help.name)
-        });
+function addCommands(dir) {
+    var list = fs.readdirSync(dir);
+    list.forEach(function(f) {
+        var dir_file = dir + f + '/';
+        var stat = fs.statSync(dir_file);
+        if (stat && stat.isDirectory()) {
+            addCommands(dir_file);
+        } else {
+            if (f.substr(f.length -3) !== '.js') return;
+            let props = require(`${dir}${f}`);
+            client.log(`Loading command: "${props.help.name}"...`);
+            client.commands.set(props.help.name, props);
+            props.conf.aliases.forEach(alias => {
+                client.aliases.set(alias, props.help.name)
+            });
+        }
     });
-});
+}
+
+addCommands('./commands/');
 
 fs.readdir('./helpers/', (err, files) => {
     if (err) console.error(err);
-    log(`Loading a total of ${files.length} helpers.`);
+    client.log(`Loading a total of ${files.length} helpers.`);
     files.forEach(f => {
         if (f.substr(f.length -3) !== '.js') return;
         let prop = require(`./helpers/${f}`);
-        log(`Loading helper: "${prop.name}"...`);
+        client.log(`Loading helper: "${prop.name}"...`);
         client.helpers.set(prop.name,prop);
     });
 });
