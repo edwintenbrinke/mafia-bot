@@ -5,19 +5,19 @@ exports.run = (client, message, msg) => {
         if (err) return console.log(err);
         var user_data = JSON.parse(raw_user_data);
 
-        message.channel.send('User: ' + message.author.username + '\nCash: $' + user_data.cash);
+        message.channel.send('User: ' + message.author.username + '\nCash: $' + user_data.cash + '\nExp: ' + user_data.exp + '\nHealth: ' + user_data.health);
     });
 };
 
 exports.conf = {
     enabled: true,
     guildOnly: false,
-    aliases: [],
+    aliases: ['i'],
     permLevel: 0
 };
 
 exports.help = {
-    name: "i",
+    name: "info",
     description: "User info.",
-    usage: "i"
+    usage: "info"
 };

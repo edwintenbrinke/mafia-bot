@@ -12,6 +12,8 @@ const log = (msg) => {
 client.commands = new Discord.Collection();
 client.aliases = new Discord.Collection();
 client.helpers = new Discord.Collection();
+client.randomBetween = function randomBetween(max, min) { return Math.floor(Math.random() * (max - min + 1) ) + min; };
+
 fs.readdir('./commands/', (err, files) => {
     if (err) console.error(err);
     log(`Loading a total of ${files.length} commands.`);
