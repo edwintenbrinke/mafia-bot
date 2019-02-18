@@ -1,6 +1,6 @@
 const ranks = {
     0:{'rank': 'Empty-Suit', 'exp': 0, 'prison_escape_chance': 10},
-    1:{'rank': 'Deilveryboy', 'exp': 100, 'prison_escape_chance': 12.5},
+    1:{'rank': 'Deliveryboy', 'exp': 100, 'prison_escape_chance': 12.5},
     2:{'rank': 'Picciotto', 'exp': 200, 'prison_escape_chance': 15},
     3:{'rank': 'Shoplifter', 'exp': 400, 'prison_escape_chance': 17.5},
     4:{'rank': 'Pickpocket', 'exp': 800, 'prison_escape_chance': 20},
