@@ -51,6 +51,6 @@ exports.conf = {
 
 exports.help = {
     name: "g50",
-    description: "50/50 to win",
-    usage: "g50 [number]"
+    description: "50/50 to win, you have to roll higher than 50.",
+    usage: "g50 [cash]"
 };

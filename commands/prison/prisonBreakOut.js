@@ -30,6 +30,11 @@ exports.run = (client, message, msg) => {
     var user_rank = _rank.getUserRank(author);
     //if no msg
     if (!bust_out) {
+        if (!_date.isInTheFuture(author.prison.time)) {
+            message.channel.send(`You're not even in prison silly.`);
+            return;
+        }
+
         if (!author.prison.escape_chance) {
             message.channel.send(`You already tried to escape, the guards have you under 24/7 monitoring now.`, {code: 'asciidoc'});
             return;
@@ -37,6 +42,7 @@ exports.run = (client, message, msg) => {
         //try to break yourself out
         if(awnser <= user_rank.prison_escape_chance) {
             author.prison.time = new Date();
+            author.exp += 25;
             message.channel.send(`You have successfully broken yourself out of prison.`, {code: 'asciidoc'});
         } else {
             //increase prison time 5mins 60 & 5
@@ -60,6 +66,7 @@ exports.run = (client, message, msg) => {
 
         if(awnser <= (user_rank.prison_escape_chance+10)) {
             target.prison.time = new Date();
+            author.exp += 25;
             message.channel.send(`You have successfully broken ${target.username} out of prison.`, {code: 'asciidoc'});
         } else {
             //increase prison time 5mins 60 & 5

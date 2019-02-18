@@ -1,46 +1,12 @@
 {
-    'Empty-Suit': 100,
-    'Deilveryboy': 200,
-    'Picciotto': 400,
-    'Shoplifter': 800,
-    'Pickpocket': 1600,
-    'Thief': 3200,
-    'Associate': 6400,
-    'Mobster': 12800,
-    'Soldier': 25600,
-    'Swindler': 51200,
-    'Assassin': 102400,
-    'Local Chief': 204800,
-    'Chief': 409600,
-    'Bruglione': 819200,
-    'Godfather': 1638400
-}
-
-{
-    'Empty-Suit': 0,
-    'Deilveryboy': 100,
-    'Picciotto': 200,
-    'Shoplifter': 400,
-    'Pickpocket': 800,
-    'Thief': 1600,
-    'Associate': 3200,
-    'Mobster': 6400,
-    'Soldier': 12800,
-    'Swindler': 25600,
-    'Assassin': 51200,
-    'Local Chief': 102400,
-    'Chief': 204800,
-    'Bruglione': 409600,
-    'Godfather': 819200
-}
-
-{
- 0:{'rank': '', 'exp': 0}
- 0:{'rank': '', 'exp': 0}
- 0:{'rank': '', 'exp': 0}
- 0:{'rank': '', 'exp': 0}
- 0:{'rank': '', 'exp': 0}
- 0:{'rank': '', 'exp': 0}
- 0:{'rank': '', 'exp': 0}
- 
+  "name": "mafia-bot",
+  "version": "0.0.1",
+  "description": "Discord bot",
+  "main": "app.js",
+  "author": "Edwin ten Brinke",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "discord.js": "^11.4.2",
+    "moment": "^2.24.0"
+  }
 }

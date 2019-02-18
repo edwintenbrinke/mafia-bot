@@ -72,7 +72,7 @@ exports.conf = {
 };
 
 exports.help = {
-    name: "org_crime",
-    description: "do an org_crime",
-    usage: "crime"
+    name: "orgCrime",
+    description: "Do an organised crime.",
+    usage: "orgCrime"
 };

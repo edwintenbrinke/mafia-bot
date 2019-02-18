@@ -4,6 +4,7 @@ exports.run = (client, message, msg) => {
     var _date = client.helpers.get('date');
     var prison_users = [];
     var paths = [];
+    var user_names = [];
 
     client.users.array().forEach(function(user){
         if (user.bot) return;
@@ -16,6 +17,7 @@ exports.run = (client, message, msg) => {
     paths.forEach(function(path){
         var result = fs.readFileSync(path, "utf8");
         var user_data = JSON.parse(result);
+        user_names.push(user_data.username);
         if(_date.isInTheFuture(user_data.prison.time)) prison_users.push(JSON.parse(result));
     });
 
