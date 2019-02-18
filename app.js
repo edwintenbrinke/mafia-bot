@@ -19,12 +19,13 @@ function addCommands(dir) {
     var list = fs.readdirSync(dir);
     list.forEach(function(f) {
         var dir_file = dir + f + '/';
+        if (dir_file.substr(dir_file.length -4) === '.js/') dir_file = dir_file.substr(0, dir_file.length-1);
+
         var stat = fs.statSync(dir_file);
         if (stat && stat.isDirectory()) {
             addCommands(dir_file);
         } else {
             if (f.substr(f.length -3) !== '.js') return;
-            if (f.substr(f.length -1) === '/') f = f.substring(0, f.length-1);
             let props = require(`${dir}${f}`);
             client.log(`Loading command: "${props.help.name}"...`);
             client.commands.set(props.help.name, props);
