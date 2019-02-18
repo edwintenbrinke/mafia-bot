@@ -24,6 +24,7 @@ function addCommands(dir) {
             addCommands(dir_file);
         } else {
             if (f.substr(f.length -3) !== '.js') return;
+            if (f.substr(f.length -1) === '/') f = f.substring(0, f.length-1);
             let props = require(`${dir}${f}`);
             client.log(`Loading command: "${props.help.name}"...`);
             client.commands.set(props.help.name, props);
