@@ -72,7 +72,6 @@ module.exports = {
 
         fs.writeFile(path, JSON.stringify(user), 'utf8', function (err) {
             if (err) console.log(err);
-            console.log('written');
         });
     },
     checkDeath(message, health, damage) {
