@@ -1,5 +1,8 @@
 //TODO: figure out how to get file out of here
 const fs = require('fs');
+const User = require('../models/user');
+const mongoose = require('mongoose');
+const settings = require('../settings');
 module.exports = {
     name: "user",
     writeFile(path, data) {
@@ -10,33 +13,83 @@ module.exports = {
             }
         });
     },
-    initUser: function(user, reset = false) {
-        if (user.bot) return;
-        let path = './users/' + user.id + '.json';
+    initUser: function(author, reset = false) {
+        if (author.bot) return;
+        // let path = './users/' + author.id + '.json';
+        //
+        // var now = new Date();
+        // let user_data = {
+        //     "id": author.id,
+        //     "username": author.username,
+        //     "cash": 0,
+        //     "exp": 0,
+        //     "health": 100,
+        //     "crime": now,
+        //     "org_crime": now,
+        //     "prison": {
+        //         "time": now,
+        //         "escape_chance": false
+        //     }
+        // };
+        //
+        // fs.exists(path, (exists) => {
+        //     if (!exists || reset) {
+        //         fs.writeFile(path, JSON.stringify(user_data), 'utf8', function (err) {
+        //             if (err) console.log(err);
+        //         });
+        //         console.log('Successfully written user file for '+ author.username);
+        //     }
+        // })
 
-        var now = new Date();
-        let user_data = {
-            "id": user.id,
-            "username": user.username,
-            "cash": 0,
-            "exp": 0,
-            "health": 100,
-            "crime": now,
-            "org_crime": now,
-            "prison": {
-                "time": now,
-                "escape_chance": false
-            }
+
+        mongoose.connect('mongodb://localhost/user', {useNewUrlParser: true});
+
+        //Step 1: declare promise
+        if (author.id !== settings.ownerid) return;
+        User.findOne({
+            userID: author.id
+        }, (err, user) => {
+            console.log(user)
+        });
+
+        var myPromise = () => {
+            return new Promise((resolve, reject) => {
+                User.findOne({
+                    userID: author.id
+                }, (err, user) => {
+                   err
+                       ? reject(err)
+                       : resolve(user)
+                });
+            });
         };
 
-        fs.exists(path, (exists) => {
-            if (!exists || reset) {
-                fs.writeFile(path, JSON.stringify(user_data), 'utf8', function (err) {
-                    if (err) console.log(err);
-                });
-                console.log('Successfully written user file for '+ user.username);
-            }
-        })
+        //Step 2: async promise handler
+        var callMyPromise = async () => {
+            return await (myPromise());
+        };
+
+        let user;
+        //Step 3: make the call
+        callMyPromise().then(function(result) {
+            console.log(result);
+            user = result;
+        });
+
+
+        if (author.id === settings.ownerid) console.log(user);
+        //if (callMyPromise) return console.log('already exists');
+        const new_user = new User({
+            _id: mongoose.Types.ObjectId(),
+            username: author.username,
+            id: author.id,
+            cash: 0,
+            exp: 0,
+            health: 100
+        });
+
+
+
     },
     updateUserPoints(user, points) {
         let path = './users/' + user.id + '.json';

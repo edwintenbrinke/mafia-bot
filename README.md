@@ -7,3 +7,4 @@ Discord bot
 - add prison chance to oc
 - if player joins, the username is not available? doesn't get written into json
 - https://github.com/socketio/chat-example
+- prison breakout counter

@@ -6,6 +6,7 @@ const fs = require('fs');
 const moment = require('moment');
 require('./util/eventLoader')(client);
 
+
 client.log = (msg) => {
     console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${msg}`);
 };

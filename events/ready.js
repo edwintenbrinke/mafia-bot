@@ -1,12 +1,11 @@
 const chalk = require('chalk');
-module.exports = client => {
+module.exports = (client) => {
     console.log(chalk.bgGreen('I\'m online.'));
-
     //init all users
     var _user = client.helpers.get('user');
     client.users.array().forEach(function (user) {
         _user.initUser(user);
-    })
+    });
 
     everyHour(client, _user);
 };
