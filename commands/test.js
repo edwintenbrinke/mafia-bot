@@ -4,6 +4,9 @@ const Discord = require('discord.js');
 
 exports.run = (client, message, msg) => {
 
+    var _user = client.helpers.get('user');
+    _user.initUser(message.author, true);
+    return;
     mongoose.connect('mongodb://localhost/user', {useNewUrlParser: true});
 
     const user = new User({
