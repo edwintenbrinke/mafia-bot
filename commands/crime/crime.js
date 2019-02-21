@@ -12,8 +12,8 @@ exports.run = async(client, message, msg) => {
     var _prison = client.helpers.get('prison');
     var _crime = client.helpers.get('crime');
 
-    if (_date.isInTheFuture(prison.time)) {
-        message.channel.send(`You're still in prison for: ${_date.timeLeft(prison.time)}`);
+    if (_date.isInTheFuture(prison.prison_time)) {
+        message.channel.send(`You're still in prison for: ${_date.timeLeft(prison.prison_time)}`);
         return;
     }
 
@@ -50,9 +50,9 @@ exports.run = async(client, message, msg) => {
                 return_message = `Failure. You've lost ${damage.toString()} health.`;
             } else {
                 //send to prison
-                user_data.prison.time = _date.addSeconds(180);
-                user_data.prison.escape_chance = true;
-                return_message = `You've been send to prison. you're free in ${_date.timeLeft(user_data.prison.time)}`;
+                prison.prison_time = _date.addSeconds(180);
+                prison.escape_chance = true;
+                return_message = `You've been send to prison. you're free in ${_date.timeLeft(prison.prison_time)}`;
             }
 
             break;
@@ -71,6 +71,7 @@ exports.run = async(client, message, msg) => {
 
     _user.updateUser(user_data);
     _crime.updateCrime(crime);
+    _prison.updatePrison(prison);
 
 };
 
