@@ -2,11 +2,17 @@ const User = require('../models/user');
 const mongoose = require('mongoose');
 const Discord = require('discord.js');
 
-exports.run = (client, message, msg) => {
+exports.run = async(client, message, msg) => {
 
-    var _user = client.helpers.get('user');
-    _user.initUser(message.author, true);
+
+    let user_data = await User.updateOne({
+        id: message.author.id
+    }, {$inc: {cash: 50} });
+
+    console.log(user_data);
     return;
+
+
     mongoose.connect('mongodb://localhost/user', {useNewUrlParser: true});
 
     const user = new User({

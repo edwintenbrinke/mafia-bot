@@ -14,7 +14,7 @@ function increaseAllOnlinePoints(_user, users, points) {
     users.array().forEach(function(user){
         if (user.bot) return;
         if (user.presence.status === "online" || user.presence.status === "dnd") {
-            _user.updateUserPoints(user, points);
+            _user.increaseUserCash(user, points);
         }
     });
 }

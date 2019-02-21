@@ -1,36 +1,25 @@
 //TODO: figure out how to get file out of here
 const fs = require('fs');
 const User = require('../models/user');
+const Crime = require('../models/crime');
+const Prison = require('../models/prison');
 const mongoose = require('mongoose');
-const settings = require('../settings');
+
 module.exports = {
     name: "user",
-    writeFile(path, data) {
-        fs.writeFile(path, data, 'utf8', function (err) {
-            if (err) {
-                console.log(err);
-                this.writeFile(path, data);
-            }
-        });
-    },
-    initUser: async function(author, reset = false) {
+    async initUser(author, reset = false) {
         if (author.bot) return;
 
-        mongoose.connect('mongodb://localhost/user', {useNewUrlParser: true});
+        let user_data = await User.findOne({id: author.id});
 
-        let user_data = await User.findOne({
-            id: author.id
-        });
-
-        if (user_data && !reset) {
-            return;
-        }
+        if (user_data && !reset) return;
 
         if (reset) {
             await User.deleteOne({
                 id: author.id
             });
         }
+
 
         const user = new User({
             _id: mongoose.Types.ObjectId(),
@@ -40,44 +29,36 @@ module.exports = {
             exp: 0,
             health: 100
         });
-
         user.save();
-    },
-    updateUserPoints(user, points) {
-        let path = './users/' + user.id + '.json';
 
-        fs.readFile(path, 'utf8', function (err,raw_user_data) {
-            if (err) return console.log(err);
-            var user_data = JSON.parse(raw_user_data);
-
-            user_data.cash += points;
-
-            fs.writeFile(path, JSON.stringify(user_data), 'utf8', function (err) {
-                if (err) console.log(err);
-            });
+        let now = new Date();
+        const crime = new Crime({
+            _id: mongoose.Types.ObjectId(),
+            id: author.id,
+            crime: now,
+            org_crime: now
         });
-    },
-    updateUserHealthAndCash(user, health, cash) {
-        let path = './users/' + user.id + '.json';
+        crime.save();
 
-        fs.readFile(path, 'utf8', function (err,raw_user_data) {
-            if (err) return console.log(err);
-            var user_data = JSON.parse(raw_user_data);
-
-            user_data.health = health;
-            user_data.cash = cash;
-
-            fs.writeFile(path, JSON.stringify(user_data), 'utf8', function (err) {
-                if (err) console.log(err);
-            });
+        const prison = new Prison({
+            _id: mongoose.Types.ObjectId(),
+            id: author.id,
+            prison_time: now,
+            escape_chance: true
         });
-    },
-    updateUser(user){
-        let path = './users/' + user.id + '.json';
+        prison.save();
 
-        fs.writeFile(path, JSON.stringify(user), 'utf8', function (err) {
-            if (err) console.log(err);
-        });
+        console.log(`Created user: ${author.id}`);
+    },
+    async increaseUserCash(user, cash) {
+        await User.updateOne({
+            id: user.id
+        }, {$inc: {cash: cash} });
+    },
+    async updateUser(user){
+        await User.updateOne({
+            id: user.id
+        }, user);
     },
     checkDeath(message, health, damage) {
         var new_health = health - damage;
@@ -86,5 +67,12 @@ module.exports = {
             return true;
         }
         return false;
+    },
+    getUserOutOfArray(users, user_id) {
+        for (var i=0; i < users.length; i++) {
+            if (users[i].id === user_id) {
+                return users[i];
+            }
+        }
     }
 }

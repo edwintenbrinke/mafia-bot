@@ -1,84 +1,80 @@
 const fs = require('fs');
-exports.run = (client, message, msg) => {
+exports.run = async(client, message, msg) => {
     //list all people in prison
     var _date = client.helpers.get('date');
     var _rank = client.helpers.get('rank');
     var _user = client.helpers.get('user');
-    var paths = [`./users/${message.author.id}.json`];
-    var users = [];
-    var bust_out = false;
+    var _prison = client.helpers.get('prison');
+    let target_id = null;
+    var ids = [message.author.id];
 
     var regex = new RegExp('^<@(?<id>.\\d*)>$');
     if (regex.test(msg)) {
-        paths.push(`./users/${regex.exec(msg).groups.id}.json`);
-        bust_out = true;
+        ids.push(regex.exec(msg).groups.id);
+        target_id = regex.exec(msg).groups.id;
     }
 
-    paths.forEach(function(path){
-        var result = fs.readFileSync(path, "utf8");
-        var user_data = JSON.parse(result);
-
-        users.push(user_data);
-    });
-
+    let users = await _prison.getUsersById(ids);
     if (users.length === 2 && users[0].id === users[1].id) {
-        bust_out = false;
+        target_id = null;
     }
 
-    var author = users[0];
+    var author = _user.getUserOutOfArray(users, message.author.id);
     var awnser = Math.random()*100;
     var user_rank = _rank.getUserRank(author);
     //if no msg
-    if (!bust_out) {
-        if (!_date.isInTheFuture(author.prison.time)) {
+    if (target_id === null) {
+        if (!_date.isInTheFuture(author.prison_time)) {
             message.channel.send(`You're not even in prison silly.`);
             return;
         }
 
-        if (!author.prison.escape_chance) {
+        if (!author.escape_chance) {
             message.channel.send(`You already tried to escape, the guards have you under 24/7 monitoring now.`, {code: 'asciidoc'});
             return;
         }
         //try to break yourself out
         if(awnser <= user_rank.prison_escape_chance) {
-            author.prison.time = new Date();
+            author.prison_time = new Date();
             author.exp += 25;
             message.channel.send(`You have successfully broken yourself out of prison.`, {code: 'asciidoc'});
         } else {
             //increase prison time 5mins 60 & 5
-            author.prison.time = _date.addSeconds(60*5, author.prison.time);
-            author.prison.escape_chance = false;
-            message.channel.send(`You failed in breaking yourself out. You're now in prison for: ${_date.timeLeft(author.prison.time)}`, {code: 'asciidoc'})
+            author.prison_time = _date.addSeconds(60*5, author.prison_time);
+            author.escape_chance = false;
+            message.channel.send(`You failed in breaking yourself out. You're now in prison for: ${_date.timeLeft(author.prison_time)}`, {code: 'asciidoc'})
         }
     } else {
-        var target = users[1];
+        let target = _user.getUserOutOfArray(users, target_id);
 
-        if (!_date.isInTheFuture(target.prison.time)) {
+        if (!_date.isInTheFuture(target.prison_time)) {
             message.channel.send(`${target.username} is not in prison.`, {code: 'asciidoc'});
             return;
         }
 
         //check if author is not in prison
-        if (_date.isInTheFuture(author.prison.time)) {
-            message.channel.send(`You're still in prison for: ${_date.timeLeft(author.prison.time)}`, {code: 'asciidoc'});
+        if (_date.isInTheFuture(author.prison_time)) {
+            message.channel.send(`You're still in prison for: ${_date.timeLeft(author.prison_time)}`, {code: 'asciidoc'});
             return;
         }
 
         if(awnser <= (user_rank.prison_escape_chance+10)) {
-            target.prison.time = new Date();
+            target.prison_time = new Date();
             author.exp += 25;
             message.channel.send(`You have successfully broken ${target.username} out of prison.`, {code: 'asciidoc'});
         } else {
             //increase prison time 5mins 60 & 5
-            author.prison.time = _date.addSeconds(60*3);
-            author.prison.escape_chance = true;
-            message.channel.send(`You failed in breaking ${target.username} out. You're now in prison for: ${_date.timeLeft(author.prison.time)}`, {code: 'asciidoc'})
+            author.prison_time = _date.addSeconds(60*3);
+            author.escape_chance = true;
+            message.channel.send(`You failed in breaking ${target.username} out. You're now in prison for: ${_date.timeLeft(author.prison_time)}`, {code: 'asciidoc'})
         }
     }
 
-    users.forEach(function (user) {
-        _user.updateUser(user);
-    })
+    users.forEach(function (prison) {
+        _prison.updatePrison(prison);
+        _user.updateUser(prison.user);
+    });
+
 };
 
 exports.conf = {

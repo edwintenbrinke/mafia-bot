@@ -5,6 +5,9 @@ module.exports = {
         if(date === null) date = new Date();
         return moment(date).add(seconds, 's');
     },
+    now() {
+        return moment();
+    },
     isInTheFuture: function(_dt) {
         var dt = new Date(_dt);
         var t = new Date();
