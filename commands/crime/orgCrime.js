@@ -67,7 +67,7 @@ exports.run = async(client, message, msg) => {
         user_data.crime.org_crime_counter += 1;
     }
 
-    user_data.crime.org_crime = _date.addSeconds(1);
+    user_data.crime.org_crime = _date.addSeconds(60 * 3);
 
     message.channel.send(return_message);
 
