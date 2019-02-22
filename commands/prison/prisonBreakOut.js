@@ -51,7 +51,7 @@ exports.run = async(client, message, msg) => {
         let target = _user.getUserOutOfArray(users, target_id);
 
         if (!_date.isInTheFuture(target.prison_time)) {
-            message.channel.send(`${target.username} is not in prison.`, {code: 'asciidoc'});
+            message.channel.send(`${target.user.username} is not in prison.`, {code: 'asciidoc'});
             return;
         }
 
