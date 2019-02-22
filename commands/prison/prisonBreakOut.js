@@ -36,7 +36,8 @@ exports.run = async(client, message, msg) => {
         //try to break yourself out
         if(awnser <= user_rank.prison_escape_chance) {
             author.prison_time = new Date();
-            author.exp += 25;
+            author.user.exp += 25;
+            author.breakout_counter += 1;
             message.channel.send(`You have successfully broken yourself out of prison.`, {code: 'asciidoc'});
         } else {
             //increase prison time 5mins 60 & 5
@@ -60,15 +61,17 @@ exports.run = async(client, message, msg) => {
 
         if(awnser <= (user_rank.prison_escape_chance+10)) {
             target.prison_time = new Date();
-            author.exp += 25;
-            message.channel.send(`You have successfully broken ${target.username} out of prison.`, {code: 'asciidoc'});
+            author.user.exp += 25;
+            author.breakout_counter += 1;
+            message.channel.send(`You have successfully broken ${target.user.username} out of prison.`, {code: 'asciidoc'});
         } else {
             //increase prison time 5mins 60 & 5
             author.prison_time = _date.addSeconds(60*3);
             author.escape_chance = true;
-            message.channel.send(`You failed in breaking ${target.username} out. You're now in prison for: ${_date.timeLeft(author.prison_time)}`, {code: 'asciidoc'})
+            message.channel.send(`You failed in breaking ${target.user.username} out. You're now in prison for: ${_date.timeLeft(author.prison_time)}`, {code: 'asciidoc'})
         }
     }
+
 
     users.forEach(function (prison) {
         _prison.updatePrison(prison);

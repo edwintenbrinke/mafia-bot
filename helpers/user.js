@@ -44,7 +44,8 @@ module.exports = {
             _id: mongoose.Types.ObjectId(),
             id: author.id,
             prison_time: now,
-            escape_chance: true
+            escape_chance: true,
+            breakouts: 0
         });
         prison.save();
 
@@ -74,5 +75,36 @@ module.exports = {
                 return users[i];
             }
         }
+    },
+    async getUserCrimePrison(author) {
+        let result = await User.aggregate([
+            {
+                $match: {id: author.id}
+            },
+            {
+                $lookup: {
+                    from: "prisons",
+                    localField: "id",
+                    foreignField: "id",
+                    as: "prison"
+                }
+            },
+            {
+                $unwind: "$prison"
+            },
+            {
+                $lookup: {
+                    from: "crimes",
+                    localField: "id",
+                    foreignField: "id",
+                    as: "crime"
+                }
+            },
+            {
+                $unwind: "$crime"
+            },
+        ]);
+
+        return result[0]
     }
 }

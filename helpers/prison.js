@@ -34,7 +34,7 @@ module.exports = {
                 }
             },
             {
-                $replaceRoot: { newRoot: { $mergeObjects: [ { $arrayElemAt: [ "$user", 0 ] }, "$$ROOT" ] } }
+                $unwind: "$user"
             }
         ]);
     },

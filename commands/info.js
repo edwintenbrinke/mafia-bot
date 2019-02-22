@@ -3,6 +3,7 @@ const User = require('../models/user');
 const Discord = require('discord.js');
 exports.run = async(client, message, msg) => {
     var _rank = client.helpers.get('rank');
+    var _format = client.helpers.get('format')
 
     let user_data = await User.findOne({id: message.author.id});
 
@@ -14,7 +15,7 @@ exports.run = async(client, message, msg) => {
         .addField("Health", user_data.health, true)
         .addField("Rank", _rank.getUserRank(user_data).rank, true)
         .addField("Experience", user_data.exp, true)
-        .addField("Cash", `$${user_data.cash}`, true)
+        .addField("Cash", _format.money(user_data.cash), true)
 
     message.channel.send(embed);
 };

@@ -1,42 +1,31 @@
 const User = require('../models/user');
 const mongoose = require('mongoose');
+const Prison = require('../models/prison');
+const Crime = require('../models/crime');
 const Discord = require('discord.js');
 
 exports.run = async(client, message, msg) => {
 
 
-    let user_data = await User.updateOne({
-        id: message.author.id
-    }, {$inc: {cash: 50} });
+    let prisons = await Prison.find();
 
-    console.log(user_data);
+    prisons.forEach(function (prison) {
+        prison.breakout_counter = 0;
+        prison.save();
+    });
+
+    let crimes = await Crime.find();
+
+    crimes.forEach(function (crime) {
+        crime.crime_counter = 0;
+        crime.org_crime_counter = 0;
+        crime.save();
+    });
+
+    message.channel.send("All data models have been updated.");
     return;
 
 
-    mongoose.connect('mongodb://localhost/user', {useNewUrlParser: true});
-
-    const user = new User({
-        _id: mongoose.Types.ObjectId(),
-        username: message.author.username,
-        id: message.author.id,
-        health: 100
-    });
-
-    let result = new Promise((resolve, reject) => {
-        user.save()
-            .then(resolve('pizza'))
-            .catch(reject)
-    });
-
-    console.log(result);
-
-    let embed = new Discord.RichEmbed()
-        .setTitle("Fancy")
-        .setColor("#00ff59")
-        .setThumbnail(message.author.displayAvatarURL)
-        .addField("User", user.username);
-
-    message.channel.send(embed);
 
 };
 
@@ -46,7 +35,7 @@ exports.conf = {
     enabled: true,
     guildOnly: false,
     aliases: ['t'],
-    permLevel: 0
+    permLevel: 4
 };
 
 exports.help = {

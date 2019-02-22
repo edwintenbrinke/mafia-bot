@@ -2,6 +2,8 @@ const User = require('../models/user');
 exports.run = async(client, message, msg) => {
     if (!parseInt(msg, 10)) return console.log("no numeric");
 
+    var _format = client.helpers.get('format');
+
     let user_data = await User.findOne({id: message.author.id});
 
     var amount = parseInt(msg, 10);
@@ -9,7 +11,7 @@ exports.run = async(client, message, msg) => {
     if (amount < 0 || amount === Infinity) return;
 
     if (user_data.cash < amount) {
-        message.channel.send('You don\'t have enough cash, you have $'+user_data.cash.toString());
+        message.channel.send('You don\'t have enough cash, you have '+_format.money(user_data.cash.toString()));
         return;
     }
 
@@ -33,7 +35,7 @@ exports.run = async(client, message, msg) => {
 
     user_data.cash += amount;
 
-    message.channel.send(return_message + " Your cash is $"+user_data.cash.toString()+". You rolled a " + Math.round(awnser));
+    message.channel.send(return_message + " Your cash is "+_format.money(user_data.cash.toString())+". You rolled a " + Math.round(awnser));
     var _user = client.helpers.get('user');
     _user.updateUser(user_data);
 };

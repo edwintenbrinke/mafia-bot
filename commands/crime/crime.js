@@ -1,24 +1,19 @@
-
-const User = require('../../models/user');
-const Crime = require('../../models/crime');
-const Prison = require('../../models/prison');
 exports.run = async(client, message, msg) => {
-    let user_data = await User.findOne({id: message.author.id});
-    let crime = await Crime.findOne({id: message.author.id});
-    let prison = await Prison.findOne({id: message.author.id});
-
     var _user = client.helpers.get('user');
     var _date = client.helpers.get('date');
     var _prison = client.helpers.get('prison');
     var _crime = client.helpers.get('crime');
+    var _format = client.helpers.get('format');
 
-    if (_date.isInTheFuture(prison.prison_time)) {
-        message.channel.send(`You're still in prison for: ${_date.timeLeft(prison.prison_time)}`);
+    let user_data = await _user.getUserCrimePrison(message.author);
+
+    if (_date.isInTheFuture(user_data.prison.prison_time)) {
+        message.channel.send(`You're still in prison for: ${_date.timeLeft(user_data.prison.prison_time)}`);
         return;
     }
 
-    if (_date.isInTheFuture(crime.crime)) {
-        message.channel.send(`You need to wait: ${_date.timeLeft(crime.crime)} before you can do this crime again.`);
+    if (_date.isInTheFuture(user_data.crime.crime)) {
+        message.channel.send(`You need to wait: ${_date.timeLeft(user_data.crime.crime)} before you can do this crime again.`);
         return;
     }
 
@@ -27,11 +22,11 @@ exports.run = async(client, message, msg) => {
     switch (true) {
         case (awnser > 97.5):
             amount = (client.randomBetween(100, 250) * 10);
-            return_message = "Jackpot! Your cash is $"+(user_data.cash + amount).toString()+". You recieved $" + Math.round(amount);
+            return_message = "Jackpot! Your cash is "+_format.money((user_data.cash + amount).toString())+". You recieved " + _format.money(Math.round(amount));
             break;
         case (awnser >= 25):
             amount = client.randomBetween(100, 250);
-            return_message = "Success! Your cash is $"+(user_data.cash + amount).toString()+". You recieved $" + Math.round(amount);
+            return_message = "Success! Your cash is "+_format.money((user_data.cash + amount).toString())+". You recieved " + _format.money(Math.round(amount));
             break;
         case (awnser < 25):
             var _fail = Math.random() * 100;
@@ -50,9 +45,9 @@ exports.run = async(client, message, msg) => {
                 return_message = `Failure. You've lost ${damage.toString()} health.`;
             } else {
                 //send to prison
-                prison.prison_time = _date.addSeconds(180);
-                prison.escape_chance = true;
-                return_message = `You've been send to prison. you're free in ${_date.timeLeft(prison.prison_time)}`;
+                user_data.prison.prison_time = _date.addSeconds(60*3);
+                user_data.prison.escape_chance = true;
+                return_message = `You've been send to prison. you're free in ${_date.timeLeft(user_data.prison.prison_time)}`;
             }
 
             break;
@@ -63,15 +58,17 @@ exports.run = async(client, message, msg) => {
     if (amount > 0) {
         user_data.cash += amount;
         user_data.exp += 10;
+        user_data.crime.crime_counter += 1;
+
     }
 
-    crime.crime = _date.addSeconds(60);
+    user_data.crime.crime = _date.addSeconds(60);
 
     message.channel.send(return_message);
 
     _user.updateUser(user_data);
-    _crime.updateCrime(crime);
-    _prison.updatePrison(prison);
+    _crime.updateCrime(user_data.crime);
+    _prison.updatePrison(user_data.prison);
 
 };
 
