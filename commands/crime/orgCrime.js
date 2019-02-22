@@ -51,7 +51,7 @@ exports.run = async(client, message, msg) => {
                 return_message = `Failure. You've lost ${damage.toString()} health.`;
             } else {
                 //send to prison
-                user_data.prison.prison_time = _date.addSeconds(60*5);
+                user_data.prison.prison_time = _date.addSeconds(60*4);
                 user_data.prison.escape_chance = true;
                 return_message = `You've been send to prison. you're free in ${_date.timeLeft(user_data.prison.prison_time)}`;
             }
@@ -62,11 +62,12 @@ exports.run = async(client, message, msg) => {
 
     if (amount > 0) {
         user_data.cash += amount;
+        if (_rank.getUserRank(user_data, 50).rank !== _rank.getUserRank(user_data).rank) message.channel.send(`You've ranked up! You're now: ${_rank.getUserRank(user_data, 50).rank}`);
         user_data.exp += 50;
         user_data.crime.org_crime_counter += 1;
     }
 
-    user_data.crime.org_crime = _date.addSeconds(60*3);
+    user_data.crime.org_crime = _date.addSeconds(1);
 
     message.channel.send(return_message);
 

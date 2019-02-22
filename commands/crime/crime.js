@@ -4,6 +4,7 @@ exports.run = async(client, message, msg) => {
     var _prison = client.helpers.get('prison');
     var _crime = client.helpers.get('crime');
     var _format = client.helpers.get('format');
+    var _rank = client.helpers.get('rank');
 
     let user_data = await _user.getUserCrimePrison(message.author);
 
@@ -45,7 +46,7 @@ exports.run = async(client, message, msg) => {
                 return_message = `Failure. You've lost ${damage.toString()} health.`;
             } else {
                 //send to prison
-                user_data.prison.prison_time = _date.addSeconds(60*3);
+                user_data.prison.prison_time = _date.addSeconds(60*2);
                 user_data.prison.escape_chance = true;
                 return_message = `You've been send to prison. you're free in ${_date.timeLeft(user_data.prison.prison_time)}`;
             }
@@ -57,6 +58,7 @@ exports.run = async(client, message, msg) => {
 
     if (amount > 0) {
         user_data.cash += amount;
+        if (_rank.getUserRank(user_data, 10).rank !== _rank.getUserRank(user_data).rank) message.channel.send(`You've ranked up! You're now: ${_rank.getUserRank(user_data, 10).rank}`);
         user_data.exp += 10;
         user_data.crime.crime_counter += 1;
 

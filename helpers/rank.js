@@ -17,11 +17,11 @@ const ranks = {
 };
 module.exports = {
     name: "rank",
-    getUserRank(user) {
+    getUserRank(user, extra = 0) {
         var current_rank;
         for (var key in ranks) {
             if (!ranks.hasOwnProperty(key)) continue;
-            if (user.exp <  ranks[key].exp) break;
+            if ((user.exp + extra) <  ranks[key].exp) break;
             current_rank = ranks[key];
         }
         return current_rank;
