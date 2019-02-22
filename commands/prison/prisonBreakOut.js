@@ -37,7 +37,7 @@ exports.run = async(client, message, msg) => {
         if(awnser <= user_rank.prison_escape_chance) {
             author.prison_time = new Date();
 
-            if (_rank.getUserRank(user_data, 25).rank !== _rank.getUserRank(user_data).rank) message.channel.send(`You've ranked up! You're now: ${_rank.getUserRank(user_data, 25).rank}`);
+            if (_rank.getUserRank(author.user, 25).rank !== _rank.getUserRank(author.user).rank) message.channel.send(`You've ranked up! You're now: ${_rank.getUserRank(author.user, 25).rank}`);
             author.user.exp += 25;
             author.breakout_counter += 1;
             message.channel.send(`You have successfully broken yourself out of prison.`, {code: 'asciidoc'});
@@ -64,7 +64,7 @@ exports.run = async(client, message, msg) => {
         if(awnser <= (user_rank.prison_escape_chance+10)) {
             target.prison_time = new Date();
 
-            if (_rank.getUserRank(user_data, 25).rank !== _rank.getUserRank(user_data).rank) message.channel.send(`You've ranked up! You're now: ${_rank.getUserRank(user_data, 25).rank}`);
+            if (_rank.getUserRank(author.user, 25).rank !== _rank.getUserRank(author.user).rank) message.channel.send(`You've ranked up! You're now: ${_rank.getUserRank(author.user, 25).rank}`);
             author.user.exp += 25;
             author.breakout_counter += 1;
             message.channel.send(`You have successfully broken ${target.user.username} out of prison.`, {code: 'asciidoc'});
