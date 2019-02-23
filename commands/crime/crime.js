@@ -21,15 +21,16 @@ exports.run = async(client, message, msg) => {
     var return_message, amount;
     var awnser = Math.random() * 100;
     switch (true) {
-        case (awnser > 97.5):
+        case (awnser < 2.5):
             amount = (client.randomBetween(100, 250) * 10);
             return_message = "Jackpot! Your cash is "+_format.money((user_data.cash + amount).toString())+". You recieved " + _format.money(Math.round(amount));
             break;
-        case (awnser >= 25):
+        case (awnser <= _rank.getSpecificFromRankForUser('crime_chance', user_data)):
             amount = client.randomBetween(100, 250);
             return_message = "Success! Your cash is "+_format.money((user_data.cash + amount).toString())+". You recieved " + _format.money(Math.round(amount));
             break;
-        case (awnser < 25):
+        default:
+            // CRIME FAILED
             var _fail = Math.random() * 100;
             if (_fail > 50) {
                 //take damage
@@ -52,8 +53,6 @@ exports.run = async(client, message, msg) => {
             }
 
             break;
-        default:
-            console.log('wtf')
     }
 
     if (amount > 0) {

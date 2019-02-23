@@ -7,6 +7,8 @@ const crime_schema = mongoose.Schema({
     crime_counter: Number,
     org_crime: Date,
     org_crime_counter: Number,
+    gta: Date,
+    gta_counter: Number
 });
 
 module.exports =  mongoose.model('crime', crime_schema);

@@ -3,6 +3,7 @@ const fs = require('fs');
 const User = require('../models/user');
 const Crime = require('../models/crime');
 const Prison = require('../models/prison');
+const Garage = require('../models/garage');
 const mongoose = require('mongoose');
 
 module.exports = {
@@ -36,7 +37,11 @@ module.exports = {
             _id: mongoose.Types.ObjectId(),
             id: author.id,
             crime: now,
-            org_crime: now
+            crime_counter: 0,
+            org_crime: now,
+            org_crime_counter: 0,
+            gta: now,
+            gta_counter: 0
         });
         crime.save();
 
@@ -49,6 +54,16 @@ module.exports = {
         });
         prison.save();
 
+        const garage = new Garage({
+            _id: mongoose.Types.ObjectId(),
+            id: crime.id,
+            car_id: 0,
+            name: '',
+            image_path: '',
+            damage: 0
+        });
+
+        garage.save();
         console.log(`Created user: ${author.id}`);
     },
     async increaseUserCash(user, cash) {
@@ -77,6 +92,7 @@ module.exports = {
         }
     },
     async getUserCrimePrison(author) {
+
         let result = await User.aggregate([
             {
                 $match: {id: author.id}

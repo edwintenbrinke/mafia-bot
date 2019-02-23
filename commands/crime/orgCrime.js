@@ -27,15 +27,16 @@ exports.run = async(client, message, msg) => {
     var return_message, amount;
     var awnser = Math.random() * 100;
     switch (true) {
-        case (awnser > 97.5):
+        case (awnser < 2.5):
             amount = (client.randomBetween(750, 1500) * 5);
             return_message = "Jackpot! Your cash is "+_format.money((user_data.cash + amount).toString())+". You recieved " + _format.money(Math.round(amount));
             break;
-        case (awnser >= 40):
+        case (awnser <= _rank.getSpecificFromRankForUser('org_crime_chance', user_data)):
             amount = client.randomBetween(750, 1500);
             return_message = "Success! Your cash is "+_format.money((user_data.cash + amount).toString())+". You recieved " + _format.money(Math.round(amount));
             break;
-        case (awnser < 40):
+        default:
+            // ORG_CRIME FAILED
             var _fail = Math.random() * 100;
             if (_fail > 50) {
                 var damage = client.randomBetween(1, 10);
@@ -56,8 +57,6 @@ exports.run = async(client, message, msg) => {
                 return_message = `You've been send to prison. you're free in ${_date.timeLeft(user_data.prison.prison_time)}`;
             }
             break;
-        default:
-            console.log('wtf')
     }
 
     if (amount > 0) {

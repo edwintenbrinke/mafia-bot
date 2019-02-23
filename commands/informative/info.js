@@ -1,5 +1,3 @@
-const fs = require('fs');
-const User = require('../models/user');
 const Discord = require('discord.js');
 exports.run = async(client, message, msg) => {
     var _rank = client.helpers.get('rank');
@@ -20,6 +18,7 @@ exports.run = async(client, message, msg) => {
         .addBlankField()
         .addField("Crimes", user_data.crime.crime_counter, true)
         .addField("Organised crimes", user_data.crime.org_crime_counter, true)
+        .addField("Cars stolen", user_data.crime.gta_counter, true)
         .addField("Prison breakouts", user_data.prison.breakout_counter, true);
 
     message.channel.send(embed);
