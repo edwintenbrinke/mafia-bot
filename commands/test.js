@@ -21,17 +21,10 @@ exports.run = async(client, message, msg) => {
     let crimes = await Crime.find();
 
     crimes.forEach(function (crime) {
-        crime.gta = new Date();
-        crime.gta_counter = 0;
-        crime.save();
-
         const garage = new Garage({
             _id: mongoose.Types.ObjectId(),
             id: crime.id,
-            car_id: 0,
-            name: '',
-            image_path: '',
-            damage: 0
+            car_id: 0
         });
 
         garage.save();

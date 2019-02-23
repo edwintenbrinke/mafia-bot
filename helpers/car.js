@@ -31,7 +31,8 @@ module.exports = {
         
         car.car_id = user.crime.gta_counter;
         car.damage = Math.round(Math.random() * (99 - 1) + 1);
-        car.price = (car.price - Math.round(car.price * (car.damage/100)));
+        console.log(user.username, (car.price - (car.price * (car.damage/100)))); //TODO: remove
+        car.price = Math.round((car.price - (car.price * (car.damage/100))));
         return car;
     },
 

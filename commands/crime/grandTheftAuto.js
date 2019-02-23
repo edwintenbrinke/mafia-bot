@@ -42,7 +42,7 @@ exports.run = async(client, message, msg) => {
                 .addField("Car", car.name, true)
                 .addField("Price", _format.money(car.price), true)
                 .addField("Damage", `${car.damage}%`, true)
-                .addField('Id', car.car_id, true);
+                .addField('Id', car.car_id + 1, true);
             break;
         default:
             // GTA FAILED
@@ -82,6 +82,7 @@ exports.run = async(client, message, msg) => {
             car_id: user_data.crime.gta_counter,
             name: car.name,
             image_path: car.image_path,
+            price: car.price,
             damage: car.damage
         });
 
