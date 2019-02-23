@@ -42,7 +42,7 @@ exports.run = async(client, message, msg) => {
                 .addField("Car", car.name, true)
                 .addField("Price", _format.money(car.price), true)
                 .addField("Damage", `${car.damage}%`, true)
-                .addField('Id', car.car_id + 1, true);
+                .addField('Id', car.car_id += 1, true);
             break;
         default:
             // GTA FAILED
