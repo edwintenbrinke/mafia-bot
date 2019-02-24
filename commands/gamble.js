@@ -1,6 +1,6 @@
 const User = require('../models/user');
 exports.run = async(client, message, msg) => {
-    if (!parseInt(msg, 10)) return console.log("no numeric");
+    if (!parseInt(msg, 10)) return;
 
     var _format = client.helpers.get('format');
 

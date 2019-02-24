@@ -6,8 +6,6 @@ exports.run = async(client, message, msg) => {
 
     let res = await Garage.find({id:message.author.id, car_id: {$ne: 0}});
 
-    console.log(res.length);
-
     if (res.length === 0) {
         message.channel.send(`You have no cars in your garage.`, {code: 'asciidoc'});
         return;
@@ -35,6 +33,6 @@ exports.conf = {
 
 exports.help = {
     name: "garage",
-    description: "List of your cars in your garage",
+    description: "List of your cars in your garage. The number after your car's name is used for selling etc.",
     usage: "garage"
 };
