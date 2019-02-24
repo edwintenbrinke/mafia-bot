@@ -18,16 +18,18 @@ exports.run = async(client, message, msg) => {
     // });
 
 
-    let crimes = await Crime.find();
+    let users = await User.find();
 
-    crimes.forEach(function (crime) {
+    users.forEach(function (user) {
+        user.gta_counter = 0;
         const garage = new Garage({
             _id: mongoose.Types.ObjectId(),
-            id: crime.id,
+            id: user.id,
             car_id: 0
         });
 
         garage.save();
+        user.save();
     });
 
     message.channel.send("All data models have been updated.");

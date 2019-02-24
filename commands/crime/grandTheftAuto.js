@@ -42,7 +42,7 @@ exports.run = async(client, message, msg) => {
                 .addField("Car", car.name, true)
                 .addField("Price", _format.money(car.price), true)
                 .addField("Damage", `${car.damage}%`, true)
-                .addField('Id', car.car_id += 1, true);
+                .addField('Id', car.car_id, true);
             break;
         default:
             // GTA FAILED
@@ -79,7 +79,7 @@ exports.run = async(client, message, msg) => {
         const garage = new Garage({
             _id: mongoose.Types.ObjectId(),
             id: message.author.id,
-            car_id: user_data.crime.gta_counter,
+            car_id: car.car_id,
             name: car.name,
             image_path: car.image_path,
             price: car.price,
