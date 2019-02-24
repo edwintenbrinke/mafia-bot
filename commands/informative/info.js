@@ -34,5 +34,6 @@ exports.conf = {
 exports.help = {
     name: "information",
     description: "User information.",
-    usage: "information"
+    usage: "information",
+    category: "Information"
 };

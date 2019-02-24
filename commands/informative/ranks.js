@@ -20,5 +20,6 @@ exports.conf = {
 exports.help = {
     name: "ranks",
     description: "Get a list of all the ranks.",
-    usage: "ranks"
+    usage: "ranks",
+    category: "Information"
 };

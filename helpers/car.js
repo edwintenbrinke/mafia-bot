@@ -28,13 +28,15 @@ module.exports = {
                 keys = Object.keys(cars[0]);
                 car = cars[0][keys[ keys.length * Math.random() << 0]];
         }
-        
-        car.car_id = user.crime.gta_counter;
-        car.car_id += 1;
-        car.damage = Math.round(Math.random() * (99 - 1) + 1);
-        console.log(user.username, (car.price - (car.price * (car.damage/100)))); //TODO: remove
-        car.price = Math.round((car.price - (car.price * (car.damage/100))));
-        return car;
+
+        let new_car = {};
+        new_car.name = car.name;
+        new_car.image_path = car.image_path;
+        new_car.car_id = user.crime.gta_counter;
+        new_car.car_id += 1;
+        new_car.damage = Math.round(Math.random() * (99 - 1) + 1);
+        new_car.price = Math.round((car.price - (car.price * (new_car.damage/100))));
+        return new_car;
     },
 
     async countCars(author) {
@@ -51,4 +53,12 @@ module.exports = {
         let amount = await this.countCars(user);
         return amount > 10;
     },
+    findOrignalCar(_car) {
+        var tiers = Object.keys(cars);
+        for (var tier in tiers) {
+            for (var og_car in cars[tier]) {
+                if (_car.name === cars[tier][og_car].name) return cars[tier][og_car];
+            }
+        }
+    }
 }

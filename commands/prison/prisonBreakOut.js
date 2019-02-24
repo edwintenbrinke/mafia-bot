@@ -94,5 +94,6 @@ exports.conf = {
 exports.help = {
     name: "prisonBreakOut",
     description: "Try to break yourself or someone out of prison.",
-    usage: "prisonBreakOut [@username]"
+    usage: "prisonBreakOut [@username]",
+    category: "Prison"
 };

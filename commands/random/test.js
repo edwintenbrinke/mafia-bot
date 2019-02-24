@@ -1,8 +1,8 @@
-const User = require('../models/user');
+const User = require('../../models/user');
 const mongoose = require('mongoose');
-const Prison = require('../models/prison');
-const Crime = require('../models/crime');
-const Garage = require('../models/garage');
+const Prison = require('../../models/prison');
+const Crime = require('../../models/crime');
+const Garage = require('../../models/garage');
 const Discord = require('discord.js');
 
 exports.run = async(client, message, msg) => {
@@ -51,5 +51,6 @@ exports.conf = {
 exports.help = {
     name: "test",
     description: "test",
-    usage: "test"
+    usage: "test",
+    category: 'Not categorised'
 };

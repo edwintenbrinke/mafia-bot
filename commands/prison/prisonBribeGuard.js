@@ -11,6 +11,7 @@ exports.conf = {
 
 exports.help = {
     name: "prisonBribeGuard",
-    description: "Try to bribe a guard. You'll try to offer $100 for every 10 seconds in jail",
-    usage: "prisonBribeGuard"
+    description: "Try to bribe a guard. You'll offer $100 for every 10 seconds in jail.",
+    usage: "prisonBribeGuard",
+    category: "Prison"
 };

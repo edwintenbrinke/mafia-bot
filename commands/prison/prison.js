@@ -25,5 +25,6 @@ exports.conf = {
 exports.help = {
     name: "prison",
     description: "List of people in prison",
-    usage: "prison"
+    usage: "prison",
+    category: "Prison"
 };

@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../../models/user');
 exports.run = async(client, message, msg) => {
     if (msg.length !== 0 && !parseInt(msg, 10)) return console.log("no numeric");
 
@@ -48,5 +48,6 @@ exports.conf = {
 exports.help = {
     name: "replenish",
     description: "Replenish your health, $100 = 1 Health",
-    usage: "replenish [amount] #no amount = full health"
+    usage: "replenish [amount] #no amount = full health",
+    category: 'Not categorised'
 };

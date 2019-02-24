@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const User = require('../../models/user');
 exports.run = async(client, message, msg) => {
     if (!parseInt(msg, 10)) return;
 
@@ -50,5 +50,6 @@ exports.conf = {
 exports.help = {
     name: "g50",
     description: "50/50 to win, you have to roll higher than 50.",
-    usage: "g50 [cash]"
+    usage: "g50 [cash]",
+    category: "Gambling"
 };

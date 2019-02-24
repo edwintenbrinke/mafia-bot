@@ -18,7 +18,6 @@ exports.run = async(client, message, msg) => {
         price.push(_format.money(car.price));
     });
 
-
     const longest = names.reduce((long, str) => Math.max(long, str.length), 0);
     const longest_price = price.reduce((long, str) => Math.max(long, str.length), 0);
     message.channel.send(`= You have the following cars =\n\n${res.map(d => `${d.name}${' '.repeat(longest - d.name.length)} :: ${d.car_id} :: ${_format.money(d.price)}${' '.repeat(longest_price - _format.money(d.price).length)} :: ${d.damage}%`).join('\n')}`, {code: 'asciidoc'});
@@ -33,6 +32,7 @@ exports.conf = {
 
 exports.help = {
     name: "garage",
-    description: "List of your cars in your garage. The number after your car's name is used for selling etc.",
-    usage: "garage"
+    description: "List of your cars in your garage.",
+    usage: "garage",
+    category: "Car"
 };

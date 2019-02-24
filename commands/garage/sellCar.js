@@ -17,7 +17,7 @@ exports.run = async(client, message, msg) => {
 
     user.cash += car.price;
 
-    message.channel.send(`You've succesfully sold your ${car.name} for ${_format.money(car.price)}`, {code: 'asciidoc'});
+    message.channel.send(`You've successfully sold your ${car.name} for ${_format.money(car.price)}`, {code: 'asciidoc'});
 
     car.delete();
     user.save();
@@ -31,7 +31,8 @@ exports.conf = {
 };
 
 exports.help = {
-    name: "sellCard",
-    description: "List of your cars in your garage",
-    usage: "sellCard [car id]"
+    name: "sellCar",
+    description: "Sell a car from your garage",
+    usage: "sellCar [car id]",
+    category: "Car"
 };

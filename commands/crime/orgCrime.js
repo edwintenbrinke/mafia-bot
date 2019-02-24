@@ -86,5 +86,6 @@ exports.conf = {
 exports.help = {
     name: "orgCrime",
     description: "Do an organised crime.",
-    usage: "orgCrime"
+    usage: "orgCrime",
+    category: "Crimes"
 };

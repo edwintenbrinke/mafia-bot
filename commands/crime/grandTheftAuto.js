@@ -29,20 +29,20 @@ exports.run = async(client, message, msg) => {
         return;
     }
 
-    var return_message, car;
+    var return_message, new_car;
     var awnser = Math.random() * 100;
     switch (true) {
         case (awnser <= _rank.getSpecificFromRankForUser('gta_chance', user_data)):
-            // You've stolen a car.
-            car = _car.stealCar(_rank.getUserRank(user_data),user_data);
+            // You've stolen a new_car.
+            new_car = _car.stealCar(_rank.getUserRank(user_data),user_data);
 
             return_message = new Discord.RichEmbed()
                 .setColor("#0000ff")
-                .setThumbnail(`http://www.edwintenbrinke.nl/images/cars/${car.image_path}`)
-                .addField("Car", car.name, true)
-                .addField("Price", _format.money(car.price), true)
-                .addField("Damage", `${car.damage}%`, true)
-                .addField('Id', car.car_id, true);
+                .setThumbnail(`http://www.edwintenbrinke.nl/images/cars/${new_car.image_path}`)
+                .addField("Car", new_car.name, true)
+                .addField("Price", _format.money(new_car.price), true)
+                .addField("Damage", `${new_car.damage}%`, true)
+                .addField('Id', new_car.car_id, true);
             break;
         default:
             // GTA FAILED
@@ -70,7 +70,7 @@ exports.run = async(client, message, msg) => {
             break;
     }
 
-    if (car) {
+    if (new_car) {
         // user_data.cash += amount;
         if (_rank.getUserRank(user_data, 50).rank !== _rank.getUserRank(user_data).rank) message.channel.send(`You've ranked up! You're now: ${_rank.getUserRank(user_data, 50).rank}`);
         user_data.exp += 50;
@@ -79,11 +79,11 @@ exports.run = async(client, message, msg) => {
         const garage = new Garage({
             _id: mongoose.Types.ObjectId(),
             id: message.author.id,
-            car_id: car.car_id,
-            name: car.name,
-            image_path: car.image_path,
-            price: car.price,
-            damage: car.damage
+            car_id: new_car.car_id,
+            name: new_car.name,
+            image_path: new_car.image_path,
+            price: new_car.price,
+            damage: new_car.damage
         });
 
         garage.save();
@@ -109,5 +109,6 @@ exports.conf = {
 exports.help = {
     name: "grandTheftAuto",
     description: "Try to steal a car.",
-    usage: "grandTheftAuto"
+    usage: "grandTheftAuto",
+    category: "Crimes"
 };
