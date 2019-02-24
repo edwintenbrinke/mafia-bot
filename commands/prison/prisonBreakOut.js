@@ -21,7 +21,7 @@ exports.run = async(client, message, msg) => {
 
     var author = _user.getUserOutOfArray(users, message.author.id);
     var awnser = Math.random()*100;
-    var user_rank = _rank.getUserRank(author);
+    var user_rank = _rank.getUserRank(author.user);
     //if no msg
     if (target_id === null) {
         if (!_date.isInTheFuture(author.prison_time)) {
