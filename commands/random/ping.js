@@ -24,5 +24,6 @@ exports.conf = {
 exports.help = {
     name: "ping",
     description: "Checks the bot's ping to the server. DOESN'T check your ping.",
-    usage: "ping"
+    usage: "ping",
+    category: 'Not categorised'
 };

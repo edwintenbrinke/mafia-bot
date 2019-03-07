@@ -1,12 +1,11 @@
 const chalk = require('chalk');
-module.exports = client => {
+module.exports = (client) => {
     console.log(chalk.bgGreen('I\'m online.'));
-
     //init all users
     var _user = client.helpers.get('user');
     client.users.array().forEach(function (user) {
         _user.initUser(user);
-    })
+    });
 
     everyHour(client, _user);
 };
@@ -15,7 +14,7 @@ function increaseAllOnlinePoints(_user, users, points) {
     users.array().forEach(function(user){
         if (user.bot) return;
         if (user.presence.status === "online" || user.presence.status === "dnd") {
-            _user.updateUserPoints(user, points);
+            _user.increaseUserCash(user, points);
         }
     });
 }

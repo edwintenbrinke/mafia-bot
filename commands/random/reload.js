@@ -31,5 +31,6 @@ exports.conf = {
 exports.help = {
     name: "reload",
     description: "Reloads the command file if it has been updated or modified.",
-    usage: "reload [command-name]"
+    usage: "reload [command-name]",
+    category: 'Not categorised'
 };

@@ -1,10 +1,15 @@
+#!/usr/bin/env node
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const settings = require('./settings.json');
 const chalk = require('chalk');
 const fs = require('fs');
 const moment = require('moment');
+
+const mongoose = require('mongoose');
 require('./util/eventLoader')(client);
+
+mongoose.connect('mongodb://localhost/mafia', {useNewUrlParser: true});
 
 client.log = (msg) => {
     console.log(`[${moment().format('YYYY-MM-DD HH:mm:ss')}] ${msg}`);

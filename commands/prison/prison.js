@@ -1,32 +1,18 @@
-const fs = require('fs');
-exports.run = (client, message, msg) => {
+const Prison = require('../../models/prison');
+const User = require('../../models/user');
+exports.run = async(client, message, msg) => {
     //list all people in prison
     var _date = client.helpers.get('date');
-    var prison_users = [];
-    var paths = [];
-    var user_names = [];
+    var _prison = client.helpers.get('prison');
 
-    client.users.array().forEach(function(user){
-        if (user.bot) return;
-        //only check online/dnd people for efficiency
-        if (user.presence.status === "online" || user.presence.status === "dnd") {
-            paths.push('./users/' + user.id + '.json');
-        }
-    });
+    let res = await _prison.getAllUsersInPrison();
 
-    paths.forEach(function(path){
-        var result = fs.readFileSync(path, "utf8");
-        var user_data = JSON.parse(result);
-        user_names.push(user_data.username);
-        if(_date.isInTheFuture(user_data.prison.time)) prison_users.push(JSON.parse(result));
-    });
-
-    if (prison_users.length === 0) {
+    if (res.length === 0) {
         message.channel.send(`There are no people in prison!`, {code: 'asciidoc'});
         return;
     }
 
-    message.channel.send(`= The following people are in prison =\n\n${prison_users.map(u => `${u.username} :: ${_date.timeLeft(u.prison.time)}`).join('\n')}`, {code: 'asciidoc'});
+    message.channel.send(`= The following people are in prison =\n\n${res.map(d => `${d.username} :: ${_date.timeLeft(d.prison_time)}`).join('\n')}`, {code: 'asciidoc'});
 };
 
 exports.conf = {
@@ -39,5 +25,6 @@ exports.conf = {
 exports.help = {
     name: "prison",
     description: "List of people in prison",
-    usage: "prison"
+    usage: "prison",
+    category: "Prison"
 };
